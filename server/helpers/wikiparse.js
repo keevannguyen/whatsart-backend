@@ -41,7 +41,7 @@ const getArtworkDetails = (doc) => {
     medium: medium.text(),
     dimensions: dimensions,
     summary: summary,
-    imgURL: getImgUrl(infobox.image_file.text(), 600),
+    imgURL: getImgUrl(infobox.image_file.text(), 800),
   };
   return artworkDetails;
 }

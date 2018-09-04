@@ -63,9 +63,8 @@ router.get('/museums', (req, res, next) => {
   User.findById(test_id)
   .populate('userCollection', 'museum city lat lng')
   .exec()
-  .then(({ userCollection }) => {
-    res.json({ markers: userCollection });
-  })
+  .then(({ userCollection }) => res.json({ success: true, markers: userCollection }))
+  .catch(err => res.status(404).json({ success: false, error: err }));
 });
 
 export default router;
