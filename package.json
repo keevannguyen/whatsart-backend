@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server/server.js --exec babel-node",
+    "start": "babel-node index.js",
     "build": "babel server -d build",
-    "serve": "node build/server.js"
+    "serve": "node build/server.js",
+    "backend-dev": "nodemon server/server.js --exec babel-node"
   },
   "repository": {
     "type": "git",
