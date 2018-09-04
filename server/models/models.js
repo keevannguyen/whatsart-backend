@@ -58,6 +58,14 @@ const artworkSchema = new Schema({
     default: '',
     type: String,
   },
+  lat: {
+    default: '',
+    type: String,
+  },
+  lng: {
+    default: '',
+    type: String,
+  },
   medium: {
     default: '',
     type: String,
