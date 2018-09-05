@@ -37,9 +37,9 @@ router.post('/artwork', (req, res, next) => {
     return res.status(404).send('No Artwork Name Provided.');
   } else {
     const getArtworkInfo = (index = 0) => {
-      console.log(123)
+      console.log(123);
       return new Promise((resolve, reject) => {
-        console.log(23);
+        console.log(456);
         let artworkInfoOutter = null;
         getWikiInfo(req.body.artworkName[index])
         .then((info) => {
@@ -61,23 +61,21 @@ router.post('/artwork', (req, res, next) => {
           //req.user.userCollection.push(artwork._id);
           //req.user.save();
           resolve(artwork);
-          // res.json({ success: true, artworkInfo: artwork }); remove later
         })
         .catch(err =>{
-          //console.log(err);
           reject(err);
-          //res.status(404).json({ success: false, error: err, msg: 'Could not find artwork.' });
         });
       })
       .then((artwork) => res.json({ success: true, artworkInfo: artwork }))
       .catch((err) =>{
+        console.log(err);
         if(index === req.body.artworkName.length-1) {
           res.status(404).json({ success: false, error: err, msg: 'Could not find artwork.' });
         } else {
           getArtworkInfo(++index);
         }
       });
-    }
+    };
     getArtworkInfo();
   }
 });
