@@ -29,12 +29,15 @@ const getDimensions = (heightCM, widthCM) => {
 const getArtworkDetails = (doc) => {
   const infobox = doc.infobox(0).data;
   const { title, artist, year, city, museum, height_metric, width_metric } = infobox;
+  if (!title) {
+    return new Error("Title does not exist for artwork.");
+  }
   const medium = infobox.medium || infobox.material || infobox.type;
   const dimensions = height_metric && width_metric ?
                      getDimensions(height_metric.text(), width_metric.text()) : 'Not Available';
   const summary = doc.sections(0).data.sentences.slice(0,5).map((s) => s.text).join(" ");
   const artworkDetails = {
-    title: title ? title.text() : 'Not Available',
+    title: title.text(),
     artist: artist ? artist.text() : 'Not Available',
     year: year ? year.text() : 'Not Available',
     city: city ? city.text() : 'Not Available',
