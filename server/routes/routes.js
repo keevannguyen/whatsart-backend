@@ -26,6 +26,11 @@ const router = express.Router();
 // RESTIFY API for Accessing Artworks
 restify.serve(router, Artwork);
 
+// GET route to get current user information
+router.get('/user', (req, res, next) => {
+  res.json({ success: true, user: req.user });
+});
+
 // POST route for Users to add new Artworks
 router.post('/artwork', (req, res, next) => {
   if (!req.body.artworkName) {
@@ -57,6 +62,7 @@ router.post('/artwork', (req, res, next) => {
   }
 });
 
+// GET route for list of museums for a user's collection
 router.get('/museums', (req, res, next) => {
   const test_id = "5b8979eeb50da80b3c119cae";
   // req.user._id
