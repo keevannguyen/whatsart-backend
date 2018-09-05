@@ -10,10 +10,11 @@ const md5Hash = (fileName) => {
 
 // Helper: Get Wikipedia Image URL with md5 Hashing
 const getImgUrl = (imgFileName, imgSize) => {
-  const imgName = imgFileName.split(" ").join("_");
-  const firstTwo = md5Hash(imgName).slice(0,2);
+  const imgName = imgFileName.split(" ").join("_").split(":");
+  const finalImgName = imgName[imgName.length-1];
+  const firstTwo = md5Hash(finalImgName).slice(0,2);
   const url = encodeURI('https://upload.wikimedia.org/wikipedia/commons/thumb/' +
-               `${firstTwo[0]}/${firstTwo}/${imgName}/${imgSize}px-${imgName}`);
+               `${firstTwo[0]}/${firstTwo}/${finalImgName}/${imgSize}px-${finalImgName}`);
   return url;
 }
 
