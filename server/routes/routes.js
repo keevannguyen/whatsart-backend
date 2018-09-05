@@ -37,9 +37,7 @@ router.post('/artwork', (req, res, next) => {
     return res.status(404).send('No Artwork Name Provided.');
   } else {
     const getArtworkInfo = (index = 0) => {
-      console.log(123);
       return new Promise((resolve, reject) => {
-        console.log(456);
         let artworkInfoOutter = null;
         getWikiInfo(req.body.artworkName[index])
         .then((info) => {
@@ -50,7 +48,7 @@ router.post('/artwork', (req, res, next) => {
           return axios.get(geocodeURL);
         })
         .then((resp) => {
-          const { lat, lng } = resp.data.results[0].geometry.location;
+          const { lat, lng } = resp.data.results[0] ? resp.data.results[0].geometry.location : { lat: 'Not Available', lng: 'Not Available' };
           artworkInfoOutter = { ...artworkInfoOutter, lat: lat, lng: lng };
           return Artwork.findOrCreate({ title: artworkInfoOutter.title });
         })

@@ -31,18 +31,18 @@ const getArtworkDetails = (doc) => {
   const { title, artist, year, city, museum, height_metric, width_metric } = infobox;
   const medium = infobox.medium || infobox.material || infobox.type;
   const dimensions = height_metric && width_metric ?
-                     getDimensions(height_metric.text(), width_metric.text()) : 'None provided.';
+                     getDimensions(height_metric.text(), width_metric.text()) : 'Not Available';
   const summary = doc.sections(0).data.sentences.slice(0,5).map((s) => s.text).join(" ");
   const artworkDetails = {
-    title: title.text(),
-    artist: artist.text(),
-    year: year.text(),
-    city: city.text(),
-    museum: museum.text(),
-    medium: medium.text(),
+    title: title ? title.text() : 'Not Available',
+    artist: artist ? artist.text() : 'Not Available',
+    year: year ? year.text() : 'Not Available',
+    city: city ? city.text() : 'Not Available',
+    museum: museum ? museum.text() : 'Not Available',
+    medium: medium ? medium.text() : 'Not Available',
     dimensions: dimensions,
     summary: summary,
-    imgURL: getImgUrl(infobox.image_file.text(), 800),
+    imgURL: infobox.image_file ? getImgUrl(infobox.image_file.text(), 800) : 'Not Available',
   };
   return artworkDetails;
 }
@@ -54,8 +54,11 @@ const getWikiInfo = (artworkName) => {
     .then((doc) => {
       return resolve(getArtworkDetails(doc));
     })
-    .catch((err) => reject(`Server could not find wikipedia page for '${artworkName}' with error: ${err}`));
+    .catch((err) => {
+      //console.log('getWikiInfo ERROR:', err);
+      reject(`Server could not find wikipedia page for '${artworkName}' with error: ${err}`);
+    });
   });
-}
+};
 
 export default getWikiInfo;
