@@ -68,8 +68,8 @@ router.post('/artwork', (req, res, next) => {
                 return Object.assign(doc, artworkInfoStored).save();
               })
               .then((artwork) => {
-                //req.user.userCollection.push(artwork._id);
-                //req.user.save();
+                req.user.userCollection.push(artwork._id);
+                req.user.save();
                 return innerResolve(artwork);
               })
               .catch(err => {
