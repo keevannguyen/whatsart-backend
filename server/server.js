@@ -51,7 +51,7 @@ const hashPassword = (password) => {
   return hash.digest('hex');
 };
 
-// Passport Methods
+// Passport.js Normal LocalStrategy
 passport.use(new LocalStrategy({ usernameField: 'email' }, (username, password, done) => {
   User.findOne({ email: username }, (err, user) => {
     if (err) {
@@ -67,6 +67,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (username, password, 
   });
 }));
 
+// Passport.js with Facebook Tokens
 passport.use(new FacebookTokenStrategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
@@ -80,6 +81,7 @@ passport.use(new FacebookTokenStrategy({
   }
 ));
 
+// Passport.js with Twitter Tokens
 passport.use(new TwitterTokenStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
@@ -94,6 +96,7 @@ passport.use(new TwitterTokenStrategy({
   }
 ));
 
+// For cookies and to determine who user is
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
