@@ -5,11 +5,19 @@ import { User } from '../models/models.js';
 const router = express.Router();
 
 export default (passport) => {
-  // POST Login Request
+  // POST Regular Login Request
   router.post('/login',
     passport.authenticate('local'),
     (req, res) => {
       res.json({ id: req.user._id, success: true });
+    },
+  );
+
+  // POST Facebook Login Request
+  router.post('/facebookLogin',
+    passport.authenticate('facebook-token'),
+    (req, res) => {
+      res.json({ firstName: req.user.firstName, success: true });
     },
   );
 

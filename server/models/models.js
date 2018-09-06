@@ -16,25 +16,28 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   email: {
-    required: true,
+    default: '',
     type: String,
   },
   firstName: {
-    required: true,
+    default: '',
     type: String,
   },
   lastName: {
-    required: true,
+    default: '',
     type: String,
   },
   password: {
-    required: true,
     type: String,
   },
   userCollection: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artwork',
   }],
+  facebookId: {
+    required: false,
+    type: 'String',
+  }
 });
 
 const artworkSchema = new Schema({
@@ -89,6 +92,7 @@ const artworkSchema = new Schema({
 });
 
 // Plugins
+userSchema.plugin(findOrCreate);
 artworkSchema.plugin(findOrCreate);
 
 // Models

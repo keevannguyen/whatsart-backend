@@ -15,6 +15,7 @@ import routes from './routes/routes.js';
 import passport from 'passport';
 import crypto from 'crypto';
 import { Strategy as LocalStrategy } from 'passport-local';
+import FacebookTokenStrategy from 'passport-facebook-token';
 import { mongoose, User } from './models/models.js';
 
 // MongoDB & Sessions
@@ -63,6 +64,17 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (username, password, 
     return done(null, user);
   });
 }));
+
+passport.use(new FacebookTokenStrategy({
+    clientID: '2159152801010115',
+    clientSecret: 'ba7d5803b3f300f649dcb80d8f8e0b21'
+  }, function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate( { facebookId: profile.id } , (error, user) => {
+      Object.assign(user, { firstName: profile._json.first_name, lastName: profile._json.last_name, email: profile._json.email }).save()
+      .then((user) => done(error, user));
+    })
+  }
+));
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
