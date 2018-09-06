@@ -37,7 +37,11 @@ const userSchema = new Schema({
   facebookId: {
     required: false,
     type: 'String',
-  }
+  },
+  twitterId: {
+    required: false,
+    type: 'String',
+  },
 });
 
 const artworkSchema = new Schema({

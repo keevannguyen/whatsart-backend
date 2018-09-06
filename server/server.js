@@ -16,6 +16,8 @@ import passport from 'passport';
 import crypto from 'crypto';
 import { Strategy as LocalStrategy } from 'passport-local';
 import FacebookTokenStrategy from 'passport-facebook-token';
+import TwitterTokenStrategy from 'passport-twitter-token';
+
 import { mongoose, User } from './models/models.js';
 
 // MongoDB & Sessions
@@ -68,10 +70,24 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (username, password, 
 passport.use(new FacebookTokenStrategy({
     clientID: '2159152801010115',
     clientSecret: 'ba7d5803b3f300f649dcb80d8f8e0b21'
-  }, function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate( { facebookId: profile.id } , (error, user) => {
+  }, (accessToken, refreshToken, profile, done) => {
+    User.findOrCreate({ facebookId: profile.id }, (error, user) => {
+      if (err) { return done(err); }
       Object.assign(user, { firstName: profile._json.first_name, lastName: profile._json.last_name, email: profile._json.email }).save()
-      .then((user) => done(error, user));
+      .then((user) => done(null, user));
+    });
+  }
+));
+
+passport.use(new TwitterTokenStrategy({
+    consumerKey: 'Z9LPmRyv1tGdunVsLs8TeqvYx',
+    consumerSecret: 'AY0yaGumwKjB9AJHnh3A8ggvzYun7pfuMtBheuNnkuxqvcJi1s'
+  }, (token, tokenSecret, profile, done) => {
+    console.log(profile);
+    User.findOrCreate({ twitterId: profile.id }, (error, user) => {
+      if (err) { console.log(err); return done(err); }
+      Object.assign(user, {}).save()
+      .then((user) => done(null, user));
     });
   }
 ));

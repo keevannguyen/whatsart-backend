@@ -21,6 +21,14 @@ export default (passport) => {
     },
   );
 
+  // POST Twitter Login Request
+  router.post('/twitterLogin',
+  passport.authenticate('twitter-token'),
+    (req, res) => {
+      res.json({ firstName: 'testing', success: true });
+    }
+  );
+
   // Signup Validation Helper
   const validateSignup = userData => (userData.email && userData.firstName && userData.lastName && userData.password);
 
