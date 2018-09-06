@@ -30,7 +30,7 @@ const getArtworkDetails = (doc) => {
   const infobox = doc.infobox(0).data;
   const { title, artist, year, city, museum, height_metric, width_metric } = infobox;
   if (!title) {
-    return new Error("Title does not exist for artwork.");
+    throw "Title does not exist for artwork.";
   }
   const medium = infobox.medium || infobox.material || infobox.type;
   const dimensions = height_metric && width_metric ?
@@ -59,7 +59,7 @@ const getWikiInfo = (artworkName) => {
     })
     .catch((err) => {
       //console.log('getWikiInfo ERROR:', err);
-      reject(`Server could not find wikipedia page for '${artworkName}' with error: ${err}`);
+      return reject(`Server could not find wikipedia page for '${artworkName}' with error: ${err}`);
     });
   });
 };

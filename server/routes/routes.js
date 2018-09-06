@@ -33,6 +33,8 @@ router.get('/user', (req, res, next) => {
 
 // POST route for Users to add new Artworks
 router.post('/artwork', (req, res, next) => {
+  // axios.get("https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srlimit=5&srsearch=Lisa+del+Giocondo")
+  // .then((resp) => console.log(resp.data));
   if (!req.body.artworkName) {
     return res.status(404).send('No Artwork Name Provided.');
   } else {
@@ -41,14 +43,20 @@ router.post('/artwork', (req, res, next) => {
         let artworkInfoOutter = null;
         getWikiInfo(req.body.artworkName[index])
         .then((info) => {
-          const baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
-          const geocodeURL = `${baseURL}${accents.remove(info.museum).split(" ").join("+")}+` +
-                             `${accents.remove(info.city).split(" ").join("+")}&key=${process.env.GOOGLE_MAPS_GEOCODE_API_KEY}`;
           artworkInfoOutter = { ...info, dateViewed: new Date() };
-          return axios.get(geocodeURL);
+          if(info.museum && info.city) {
+            const baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+            const geocodeURL = `${baseURL}${accents.remove(info.museum).split(" ").join("+")}+` +
+                               `${accents.remove(info.city).split(" ").join("+")}&key=${process.env.GOOGLE_MAPS_GEOCODE_API_KEY}`;
+            return axios.get(geocodeURL);
+          }
+          else {
+            return Promise.resolve({ lat: 'Not Available', lng: 'Not Available' });
+          }
         })
         .then((resp) => {
-          const { lat, lng } = resp.data.results[0] ? resp.data.results[0].geometry.location : { lat: 'Not Available', lng: 'Not Available' };
+          if(resp.data) { resp = resp.data.results[0].geometry.location }
+          const { lat, lng } = resp;
           artworkInfoOutter = { ...artworkInfoOutter, lat: lat, lng: lng };
           return Artwork.findOrCreate({ title: artworkInfoOutter.title });
         })
@@ -58,10 +66,10 @@ router.post('/artwork', (req, res, next) => {
         .then((artwork) => {
           //req.user.userCollection.push(artwork._id);
           //req.user.save();
-          resolve(artwork);
+          return resolve(artwork);
         })
-        .catch(err =>{
-          reject(err);
+        .catch(err => {
+          return reject(err);
         });
       })
       .then((artwork) => res.json({ success: true, artworkInfo: artwork }))

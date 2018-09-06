@@ -72,7 +72,7 @@ passport.use(new FacebookTokenStrategy({
     User.findOrCreate( { facebookId: profile.id } , (error, user) => {
       Object.assign(user, { firstName: profile._json.first_name, lastName: profile._json.last_name, email: profile._json.email }).save()
       .then((user) => done(error, user));
-    })
+    });
   }
 ));
 
