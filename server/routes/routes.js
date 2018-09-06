@@ -15,13 +15,13 @@ import accents from 'remove-accents';
 const router = express.Router();
 
 // Checks that User is Logged In Before Accessing Other Routes
-// router.use('/', (req, res, next) => {
-//   if (req.user) {
-//     next();
-//   } else {
-//     res.status(404).send('No user logged in.');
-//   }
-// });
+router.use('/', (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.status(404).send('No user logged in.');
+  }
+});
 
 // RESTIFY API for Accessing Artworks
 restify.serve(router, Artwork);
@@ -68,8 +68,6 @@ router.post('/artwork', (req, res, next) => {
                 return Object.assign(doc, artworkInfoStored).save();
               })
               .then((artwork) => {
-                req.user.userCollection.push(artwork._id);
-                req.user.save();
                 return innerResolve(artwork);
               })
               .catch(err => {
@@ -91,7 +89,11 @@ router.post('/artwork', (req, res, next) => {
         .then((artwork) => outterResolve(artwork))
         .catch((err) => outterReject(err));
       })
-      .then((artwork) => res.json({ success: true, artworkInfo: artwork }))
+      .then((artwork) => {
+        req.user.userCollection.push(artwork._id);
+        req.user.save()
+        .then((user) => res.json({ success: true, artworkInfo: artwork }));
+      })
       .catch((err) =>{
         // console.log(err);
         if (outterIndex === req.body.artworkName.length-1) {
