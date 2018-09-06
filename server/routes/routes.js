@@ -19,7 +19,8 @@ router.use('/', (req, res, next) => {
   if (req.user) {
     next();
   } else {
-    res.status(404).send('No user logged in.');
+    res.statusMessage = 'No user logged in.';
+    res.status(404).end();
   }
 });
 
