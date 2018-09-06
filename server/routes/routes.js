@@ -33,7 +33,7 @@ router.get('/user', (req, res, next) => {
 
 // POST route for Users to add new Artworks
 router.post('/artwork', (req, res, next) => {
-  if (!req.body.artworkName) {
+  if (!req.body.artworkName || req.body.artworkName.constructor !== Array || req.body.artworkName.length === 0) {
     return res.status(404).send('No Artwork Name Provided.');
   } else {
     const getArtworkInfoOutter = (outterIndex = 0) => {
@@ -90,10 +90,9 @@ router.post('/artwork', (req, res, next) => {
         .catch((err) => outterReject(err));
       })
       .then((artwork) => {
-        // req.user.userCollection.push(artwork._id);
-        // req.user.save()
-        // .then((user) => res.json({ success: true, artworkInfo: artwork }));
-        res.json({ success: true, artworkInfo: artwork });
+        req.user.userCollection.push(artwork._id);
+        req.user.save()
+        .then((user) => res.json({ success: true, artworkInfo: artwork }));
       })
       .catch((err) =>{
         // console.log(err);
