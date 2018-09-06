@@ -90,7 +90,7 @@ router.post('/artwork', (req, res, next) => {
         .catch((err) => outterReject(err));
       })
       .then((artwork) => {
-        req.user.userCollection.push(artwork._id);
+        if (!req.user.userCollection.includes(artwork._id)){ req.user.userCollection.push(artwork._id); }
         req.user.save()
         .then((user) => res.json({ success: true, artworkInfo: artwork }));
       })
@@ -110,7 +110,7 @@ router.post('/artwork', (req, res, next) => {
 // GET route for list of museums for a user's collection
 router.get('/museums', (req, res, next) => {
   User.findById(req.user._id)
-  .populate('userCollection', 'museum city lat lng')
+  .populate('userCollection', 'museum city lat lng imgURL')
   .exec()
   .then(({ userCollection }) => res.json({ success: true, markers: userCollection }))
   .catch(err => res.status(404).json({ success: false, error: err }));
