@@ -39,6 +39,7 @@ router.post('/artwork', (req, res, next) => {
   } else {
     const getArtworkInfoOutter = (outterIndex = 0) => {
       return new Promise((outterResolve, outterReject) => {
+        if (!req.body.artworkName[outterIndex]) { throw "Undefined object"; }
         const searchQuery = req.body.artworkName[outterIndex].split(" ").join("+");
         axios.get(`https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srlimit=3&srsearch=${searchQuery}`)
         .then((resp) => {
