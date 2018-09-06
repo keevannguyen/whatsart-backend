@@ -107,9 +107,7 @@ router.post('/artwork', (req, res, next) => {
 
 // GET route for list of museums for a user's collection
 router.get('/museums', (req, res, next) => {
-  const test_id = "5b8979eeb50da80b3c119cae";
-  // req.user._id
-  User.findById(test_id)
+  User.findById(req.user._id)
   .populate('userCollection', 'museum city lat lng')
   .exec()
   .then(({ userCollection }) => res.json({ success: true, markers: userCollection }))
