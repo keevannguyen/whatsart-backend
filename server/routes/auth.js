@@ -1,6 +1,7 @@
 import express from 'express';
 import crypto from 'crypto';
 import { User } from '../models/models.js';
+import twitterAPI from 'node-twitter-api';
 
 const router = express.Router();
 
@@ -21,10 +22,43 @@ export default (passport) => {
     },
   );
 
-  // POST Twitter Login Request
-  router.post('/twitterLogin',
-  passport.authenticate('twitter-token'),
+  // GET Twitter Request Token to Request OAuth
+  router.get('/twitterRequestToken', (req, res) => {
+    const twitter = new twitterAPI({
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+      callback: decodeURIComponent(req.query.callbackURL),
+    });
+    twitter.getRequestToken((error, requestToken, requestTokenSecret, results) => {
+      if (error) {
+        res.status(500).send(error);
+      } else {
+        res.json({ success: true, requestToken: requestToken, requestTokenSecret: requestTokenSecret });
+      }
+    });
+  });
+
+  // POST Twitter OAuth Access Token
+  router.post('/twitterOAuth', (req, res, next) => {
+    const twitter = new twitterAPI({
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    });
+    const { requestToken, requestTokenSecret, oauth_verifier } = req.body;
+    twitter.getAccessToken(requestToken, requestTokenSecret, oauth_verifier, (error, accessToken, accessTokenSecret, results) => {
+      if (error) {
+        res.status(500).send(error);
+      } else {
+        res.json({ ...results, accessToken: accessToken, accessTokenSecret: accessTokenSecret, success: true });
+      }
+    });
+  });
+
+  // GET Twitter Login Request
+  router.get('/twitterLogin',
+    passport.authenticate('twitter-token'),
     (req, res) => {
+      console.log(req.user);
       res.json({ firstName: 'testing', success: true });
     }
   );

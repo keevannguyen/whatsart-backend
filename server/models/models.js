@@ -42,6 +42,10 @@ const userSchema = new Schema({
     required: false,
     type: 'String',
   },
+  profileImgURL: {
+    required: false,
+    type: 'String',
+  }
 });
 
 const artworkSchema = new Schema({

@@ -1,3 +1,7 @@
 export MONGODB_URI="mongodb://kitan:karlkevinkitan123@ds231242.mlab.com:31242/whatsart"
 export SECRET="karlkevinkitan123"
 export GOOGLE_MAPS_GEOCODE_API_KEY="AIzaSyC8kqA2LWR3xPxEFMvOY465RtDvqQS35nQ"
+export FACEBOOK_CLIENT_ID="2159152801010115"
+export FACEBOOK_CLIENT_SECRET="ba7d5803b3f300f649dcb80d8f8e0b21"
+export TWITTER_CONSUMER_KEY="Z9LPmRyv1tGdunVsLs8TeqvYx"
+export TWITTER_CONSUMER_SECRET="AY0yaGumwKjB9AJHnh3A8ggvzYun7pfuMtBheuNnkuxqvcJi1s"

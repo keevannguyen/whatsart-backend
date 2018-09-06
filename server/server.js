@@ -68,10 +68,10 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (username, password, 
 }));
 
 passport.use(new FacebookTokenStrategy({
-    clientID: '2159152801010115',
-    clientSecret: 'ba7d5803b3f300f649dcb80d8f8e0b21'
+    clientID: process.env.FACEBOOK_CLIENT_ID,
+    clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
   }, (accessToken, refreshToken, profile, done) => {
-    User.findOrCreate({ facebookId: profile.id }, (error, user) => {
+    User.findOrCreate({ facebookId: profile.id }, (err, user) => {
       if (err) { return done(err); }
       Object.assign(user, { firstName: profile._json.first_name, lastName: profile._json.last_name, email: profile._json.email }).save()
       .then((user) => done(null, user));
@@ -80,13 +80,14 @@ passport.use(new FacebookTokenStrategy({
 ));
 
 passport.use(new TwitterTokenStrategy({
-    consumerKey: 'Z9LPmRyv1tGdunVsLs8TeqvYx',
-    consumerSecret: 'AY0yaGumwKjB9AJHnh3A8ggvzYun7pfuMtBheuNnkuxqvcJi1s'
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
   }, (token, tokenSecret, profile, done) => {
-    console.log(profile);
-    User.findOrCreate({ twitterId: profile.id }, (error, user) => {
+    const [firstName, lastName] = profile.displayName.split(' ');
+    const profileImgURL = profile._json.profile_image_url.split('_normal').join('');
+    User.findOrCreate({ twitterId: profile.id }, (err, user) => {
       if (err) { console.log(err); return done(err); }
-      Object.assign(user, {}).save()
+      Object.assign(user, { firstName, lastName, profileImgURL }).save()
       .then((user) => done(null, user));
     });
   }
