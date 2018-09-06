@@ -72,8 +72,9 @@ passport.use(new FacebookTokenStrategy({
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
   }, (accessToken, refreshToken, profile, done) => {
     User.findOrCreate({ facebookId: profile.id }, (err, user) => {
+      const [firstName, lastName] = profile.displayName.split(' ');
       if (err) { return done(err); }
-      Object.assign(user, { firstName: profile._json.first_name, lastName: profile._json.last_name, email: profile._json.email }).save()
+      Object.assign(user, { firstName, lastName, email: profile._json.email, profileImgURL: profile.photos[0].value }).save()
       .then((user) => done(null, user));
     });
   }
