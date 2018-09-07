@@ -93,6 +93,9 @@ router.post('/artwork', (req, res, next) => {
         .catch((err) => outterReject(err));
       })
       .then((artwork) => {
+        console.log(req.user.userCollection);
+        console.log(artwork._id);
+        console.log(req.user.userCollection.includes(artwork._id));
         if (!req.user.userCollection.includes(artwork._id)){ req.user.userCollection.push(artwork._id); }
         req.user.save()
         .then((user) => res.json({ success: true, artworkInfo: artwork }));
