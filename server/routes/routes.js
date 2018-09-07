@@ -93,7 +93,7 @@ router.post('/artwork', (req, res, next) => {
         .catch((err) => outterReject(err));
       })
       .then((artwork) => {
-        if (!req.user.userCollection.map(art => { console.log(Object.keys(art)); return art.$oid; }).includes(artwork._id)){ req.user.userCollection.push(artwork._id); }
+        if (!req.user.userCollection.map(art => art.id).includes(artwork._id)){ req.user.userCollection.push(artwork._id); }
         req.user.save()
         .then((user) => res.json({ success: true, artworkInfo: artwork }));
       })
