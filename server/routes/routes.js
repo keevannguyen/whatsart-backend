@@ -34,6 +34,7 @@ router.get('/user', (req, res, next) => {
 
 // POST route for Users to add new Artworks
 router.post('/artwork', (req, res, next) => {
+  console.log('Queries:', req.body.artworkName);
   if (!req.body.artworkName || req.body.artworkName.constructor !== Array || req.body.artworkName.length === 0) {
     return res.status(404).send('No Artwork Name Provided.');
   } else {
@@ -112,7 +113,7 @@ router.post('/artwork', (req, res, next) => {
 // GET route for list of museums for a user's collection
 router.get('/museums', (req, res, next) => {
   User.findById(req.user._id)
-  .populate('userCollection', 'museum city lat lng imgURL')
+  .populate('userCollection', 'title museum city lat lng imgURL')
   .exec()
   .then(({ userCollection }) => res.json({ success: true, markers: userCollection }))
   .catch(err => res.status(404).json({ success: false, error: err }));

@@ -34,6 +34,10 @@ const userSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artwork',
   }],
+  userFavorites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artwork',
+  }],
   facebookId: {
     required: false,
     type: 'String',
