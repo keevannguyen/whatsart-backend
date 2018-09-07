@@ -58,8 +58,7 @@ export default (passport) => {
   router.get('/twitterLogin',
     passport.authenticate('twitter-token'),
     (req, res) => {
-      console.log(req.user);
-      res.json({ firstName: 'testing', success: true });
+      res.json({ firstName: req.user.firstName, success: true });
     }
   );
 
