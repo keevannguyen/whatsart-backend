@@ -93,7 +93,8 @@ router.post('/artwork', (req, res, next) => {
         .catch((err) => outterReject(err));
       })
       .then((artwork) => {
-        const artIds = req.user.userCollection.map(art => art.id);
+        const artIds = req.user.userCollection.map(art => art.id.toString('utf8'));
+        console.log(req.user.userCollection);
         console.log('artIDs:', artIds);
         console.log(artwork._id);
         console.log(artIds.includes(artwork._id));
