@@ -93,9 +93,11 @@ router.post('/artwork', (req, res, next) => {
         .catch((err) => outterReject(err));
       })
       .then((artwork) => {
-        const x = req.user.userCollection.map(user => user.id.toString());
-        console.log(x);
-        console.log(x.includes(artwork._id));
+        // const x = req.user.userCollection.map(user => user.id.toString());
+        // console.log(x);
+        // console.log(x.includes(artwork._id));
+        const isInArray = req.user.userCollection.some((user) => user.equals(artwork._id));
+        console.log(isInArray);
         if (!req.user.userCollection.map(user => user.toString()).includes(artwork._id)){ req.user.userCollection.push(artwork._id); }
         req.user.save()
         .then((user) => res.json({ success: true, artworkInfo: artwork }));
