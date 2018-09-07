@@ -110,12 +110,21 @@ router.post('/artwork', (req, res, next) => {
   }
 });
 
-// GET route for getting User information AND museums populated
+// GET route for getting museums from a user's artwork collection
 router.get('/museums', (req, res, next) => {
   User.findById(req.user._id)
   .populate('userCollection', 'title museum city lat lng imgURL')
   .exec()
   .then(({ userCollection }) => res.json({ success: true, markers: userCollection }))
+  .catch(err => res.status(404).json({ success: false, error: err }));
+});
+
+// GET route for getting User information AND collection populated
+router.get('/UserWithCollection', (req, res, next) => {
+  User.findById(req.user._id)
+  .populate('userCollection')
+  .exec()
+  .then((user) => res.json({ success: true, user }))
   .catch(err => res.status(404).json({ success: false, error: err }));
 });
 
