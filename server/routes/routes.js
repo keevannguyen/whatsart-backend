@@ -27,7 +27,7 @@ router.use('/', (req, res, next) => {
 // RESTIFY API for Accessing Artworks
 restify.serve(router, Artwork);
 
-// GET route to get current user information
+// GET route to get current User information without their Collection or Favorites
 router.get('/user', (req, res, next) => {
   res.json({ success: true, user: req.user });
 });
@@ -93,7 +93,7 @@ router.post('/artwork', (req, res, next) => {
         .catch((err) => outterReject(err));
       })
       .then((artwork) => {
-        if (!req.user.userCollection.map(art => art.$oid).includes(artwork._id)){ req.user.userCollection.push(artwork._id); }
+        if (!req.user.userCollection.map(art => { console.log(Object.keys(art)); return art.$oid; }).includes(artwork._id)){ req.user.userCollection.push(artwork._id); }
         req.user.save()
         .then((user) => res.json({ success: true, artworkInfo: artwork }));
       })
@@ -110,7 +110,7 @@ router.post('/artwork', (req, res, next) => {
   }
 });
 
-// GET route for list of museums for a user's collection
+// GET route for getting User information AND museums populated
 router.get('/museums', (req, res, next) => {
   User.findById(req.user._id)
   .populate('userCollection', 'title museum city lat lng imgURL')
